@@ -40,6 +40,10 @@ export function useCollaboration({
       username,
       color: getAvatarColor(username),
     });
+    const initial = Array.from(provider.awareness.getStates().values())
+      .map((s) => s.user)
+      .filter((u) => u?.username);
+    setUsers(initial);
 
     provider.awareness.on("change", ({ added, removed }) => {
       const states = provider.awareness.getStates();

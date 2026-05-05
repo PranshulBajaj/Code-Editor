@@ -39,7 +39,7 @@ export default function HomePage({ onEnter }) {
           <input
             autoFocus
             className="home-input"
-            placeholder="e.g. alice"
+            placeholder="Your Name"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
