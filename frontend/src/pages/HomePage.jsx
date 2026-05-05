@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { generateRoomId } from "../utils/helpers";
+import { VITE_SOCKET_URL } from "../constants";
 
 export default function HomePage({ onEnter }) {
   const [username, setUsername] = useState("");
   const [roomInput, setRoomInput] = useState("");
   const [tab, setTab] = useState("create");
-
-  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
   const canSubmit =
     tab === "create"
@@ -19,7 +18,7 @@ export default function HomePage({ onEnter }) {
     if (tab === "create") {
       const roomId = generateRoomId();
       // Register room on server
-      await fetch(`${SOCKET_URL}/create-room`, {
+      await fetch(`${VITE_SOCKET_URL}/create-room`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roomId }),
@@ -27,7 +26,7 @@ export default function HomePage({ onEnter }) {
       onEnter({ username: username.trim(), roomId });
     } else {
       // Check if room exists
-      const res = await fetch(`${SOCKET_URL}/room-exists/${roomInput.trim()}`);
+      const res = await fetch(`${VITE_SOCKET_URL}/room-exists/${roomInput.trim()}`);
       const data = await res.json();
       if (!data.exists) {
         alert("Room not found. Check the room ID and try again.");
