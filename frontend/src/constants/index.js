@@ -1,4 +1,4 @@
-export const SOCKET_URL = "http://localhost:3000";
+export const SOCKET_URL = "https://code-editor-backend-0d1o.onrender.com/";
 
 export const AVATAR_COLORS = [
   "#3b82f6",
