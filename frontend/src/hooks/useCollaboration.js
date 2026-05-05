@@ -3,7 +3,7 @@ import * as Y from "yjs";
 import { SocketIOProvider } from "y-socket.io";
 import { MonacoBinding } from "y-monaco";
 import { getAvatarColor } from "../utils/helpers";
-import { SOCKET_URL } from "../constants";
+import { VITE_SOCKET_URL } from "../constants";
 
 export function useCollaboration({
   roomId,
@@ -32,7 +32,7 @@ export function useCollaboration({
   useEffect(() => {
     if (!isEditorReady || !username || !roomId) return;
 
-    const provider = new SocketIOProvider(SOCKET_URL, roomId, ydoc, {
+    const provider = new SocketIOProvider(VITE_SOCKET_URL, roomId, ydoc, {
       autoConnect: true,
     });
 

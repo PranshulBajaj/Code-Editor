@@ -4,7 +4,7 @@ import { useCollaboration } from "../hooks/useCollaboration";
 import Toolbar from "../components/Toolbar";
 import UserSidebar from "../components/UserSidebar";
 import Notifications from "../components/Notifications";
-import { SOCKET_URL } from "../constants";
+import { VITE_SOCKET_URL } from "../constants";
 
 export default function EditorPage({ username, roomId, onLeave }) {
   const [language, setLanguage] = useState("javascript");
