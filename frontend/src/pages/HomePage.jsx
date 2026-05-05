@@ -2,18 +2,39 @@ import { useState } from "react";
 import { generateRoomId } from "../utils/helpers";
 
 export default function HomePage({ onEnter }) {
-  const [username,  setUsername]  = useState("");
+  const [username, setUsername] = useState("");
   const [roomInput, setRoomInput] = useState("");
   const [tab, setTab] = useState("create");
 
-  const canSubmit = tab === "create"
-    ? username.trim().length > 0
-    : username.trim().length > 0 && roomInput.trim().length > 0;
+  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
 
-  const handleSubmit = () => {
+  const canSubmit =
+    tab === "create"
+      ? username.trim().length > 0
+      : username.trim().length > 0 && roomInput.trim().length > 0;
+
+  const handleSubmit = async () => {
     if (!canSubmit) return;
-    const roomId = tab === "create" ? generateRoomId() : roomInput.trim();
-    onEnter({ username: username.trim(), roomId });
+
+    if (tab === "create") {
+      const roomId = generateRoomId();
+      // Register room on server
+      await fetch(`${SOCKET_URL}/create-room`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomId }),
+      });
+      onEnter({ username: username.trim(), roomId });
+    } else {
+      // Check if room exists
+      const res = await fetch(`${SOCKET_URL}/room-exists/${roomInput.trim()}`);
+      const data = await res.json();
+      if (!data.exists) {
+        alert("Room not found. Check the room ID and try again.");
+        return;
+      }
+      onEnter({ username: username.trim(), roomId: roomInput.trim() });
+    }
   };
 
   return (
@@ -26,10 +47,16 @@ export default function HomePage({ onEnter }) {
         <p className="home-subtitle">Real-time collaborative code editor</p>
 
         <div className="tab-row">
-          <button className={`tab-btn ${tab === "create" ? "active" : ""}`} onClick={() => setTab("create")}>
+          <button
+            className={`tab-btn ${tab === "create" ? "active" : ""}`}
+            onClick={() => setTab("create")}
+          >
             Create Room
           </button>
-          <button className={`tab-btn ${tab === "join" ? "active" : ""}`} onClick={() => setTab("join")}>
+          <button
+            className={`tab-btn ${tab === "join" ? "active" : ""}`}
+            onClick={() => setTab("join")}
+          >
             Join Room
           </button>
         </div>
@@ -58,7 +85,11 @@ export default function HomePage({ onEnter }) {
             </>
           )}
 
-          <button className="home-btn" onClick={handleSubmit} disabled={!canSubmit}>
+          <button
+            className="home-btn"
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+          >
             {tab === "create" ? "Create & Enter →" : "Join Room →"}
           </button>
         </div>

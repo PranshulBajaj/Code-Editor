@@ -5,6 +5,8 @@ import Toolbar from "../components/Toolbar";
 import UserSidebar from "../components/UserSidebar";
 import Notifications from "../components/Notifications";
 
+const [language, setLanguage] = useState("javascript");
+
 export default function EditorPage({ username, roomId, onLeave }) {
   const editorRef = useRef(null);
   const [isEditorReady, setIsEditorReady] = useState(false);
@@ -24,13 +26,24 @@ export default function EditorPage({ username, roomId, onLeave }) {
         onLeave={onLeave}
       />
 
+      <select
+        value={language}
+        onChange={(e) => setLanguage(e.target.value)}
+        className="lang-select"
+      >
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="cpp">C++</option>
+        <option value="java">Java</option>
+      </select>
+
       <div className="app-body">
         <UserSidebar users={users} currentUser={username} />
 
         <div className="editor-wrapper">
           <Editor
             height="100%"
-            defaultLanguage="javascript"
+            defaultLanguage={language}
             theme="vs-dark"
             onMount={(editor) => {
               editorRef.current = editor;

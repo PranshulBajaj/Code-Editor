@@ -8,6 +8,18 @@ const httpServer = createServer(app)
 
 app.use(express.json());
 
+const activeRooms = new Set();
+
+app.post('/create-room', (req, res) => {
+  const { roomId } = req.body;
+  activeRooms.add(roomId);
+  res.json({ success: true });
+});
+
+app.get('/room-exists/:roomId', (req, res) => {
+  res.json({ exists: activeRooms.has(req.params.roomId) });
+});
+
 const io = new Server(httpServer, {
   cors:{
     origin:"*",
